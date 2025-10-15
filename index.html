@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scientific Calculator</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" class="display" id="display" disabled>
+        <div class="main-keys">
+            <div class="keys-left">
+                <button onclick="appendToDisplay('7')">7</button>
+                <button onclick="appendToDisplay('8')">8</button>
+                <button onclick="appendToDisplay('9')">9</button>
+                <button onclick="appendToDisplay('/')">÷</button>
+
+                <button onclick="appendToDisplay('4')">4</button>
+                <button onclick="appendToDisplay('5')">5</button>
+                <button onclick="appendToDisplay('6')">6</button>
+                <button onclick="appendToDisplay('*')">×</button>
+
+                <button onclick="appendToDisplay('1')">1</button>
+                <button onclick="appendToDisplay('2')">2</button>
+                <button onclick="appendToDisplay('3')">3</button>
+                <button onclick="appendToDisplay('-')">-</button>
+
+                <button onclick="appendToDisplay('0')">0</button>
+                <button onclick="appendToDisplay('**')">↑</button>
+                <button onclick="appendToDisplay('.')">.</button>
+                <button onclick="appendToDisplay('+')">+</button>
+
+                <button onclick="backspace()">←</button>
+                <button onclick="clearDisplay()">C</button>
+                <button onclick="calculateResult()">=</button>
+            </div>
+            <div class="keys-right">
+                <button onclick="scientific('sqrt')">√x</button>
+                <button onclick="scientific('cbrt')">³√x</button>
+                <button onclick="appendToDisplay('**')">x^y</button>
+                <button onclick="scientific('pi')">π</button>
+                <button onclick="scientific('e')">e</button>
+                <button onclick="backspace()">⌫</button>
+
+                <button onclick="appendToDisplay('(')">(</button>
+                <button onclick="appendToDisplay(')')">)</button>
+                <button onclick="scientific('sin')">sin</button>
+                <button onclick="scientific('cos')">cos</button>
+                <button onclick="scientific('tan')">tan</button>
+                <button onclick="scientific('log')">log</button>
+
+                <button onclick="scientific('asin')">sin⁻¹</button>
+                <button onclick="scientific('acos')">cos⁻¹</button>
+                <button onclick="scientific('atan')">tan⁻¹</button>
+                <button onclick="scientific('ln')">ln</button>
+                <button onclick="scientific('log2')">log₂</button>
+                <button onclick="scientific('fact')">n!</button>
+
+                <button onclick="scientific('sinh')">sinh</button>
+                <button onclick="scientific('cosh')">cosh</button>
+                <button onclick="scientific('tanh')">tanh</button>
+                <button onclick="scientific('ceil')">ceil</button>
+                <button onclick="scientific('floor')">floor</button>
+                <button onclick="scientific('abs')">abs</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const display = document.getElementById('display');
+
+        function appendToDisplay(value) {
+            display.value += value;
+        }
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function backspace() {
+            display.value = display.value.slice(0, -1);
+        }
+
+        function calculateResult() {
+            try {
+                const safeEval = new Function('return ' + display.value
+                    .replace(/√/g, 'Math.sqrt')
+                    .replace(/³/g, 'Math.cbrt')
+                    .replace(/sin/g, 'Math.sin')
+                    .replace(/cos/g, 'Math.cos')
+                    .replace(/tan/g, 'Math.tan')
+                    .replace(/log/g, 'Math.log10')
+                    .replace(/ln/g, 'Math.log')
+                    .replace(/π/g, 'Math.PI')
+                    .replace(/e/g, 'Math.E')
+                );
+                display.value = safeEval();
+            } catch (error) {
+                display.value = 'Error';
+            }
+        }
+
+        function scientific(fn) {
+            const currentVal = eval(display.value);
+            switch(fn) {
+                case 'sqrt':
+                    display.value = Math.sqrt(currentVal);
+                    break;
+                case 'cbrt':
+                    display.value = Math.cbrt(currentVal);
+                    break;
+                case 'pi':
+                    appendToDisplay(Math.PI);
+                    break;
+                case 'e':
+                    appendToDisplay(Math.E);
+                    break;
+                case 'sin':
+                    display.value = Math.sin(currentVal * Math.PI / 180);
+                    break;
+                case 'cos':
+                    display.value = Math.cos(currentVal * Math.PI / 180);
+                    break;
+                case 'tan':
+                    display.value = Math.tan(currentVal * Math.PI / 180);
+                    break;
+                case 'log':
+                    display.value = Math.log10(currentVal);
+                    break;
+                case 'ln':
+                    display.value = Math.log(currentVal);
+                    break;
+                case 'asin':
+                    display.value = Math.asin(currentVal) * 180 / Math.PI;
+                    break;
+                case 'acos':
+                    display.value = Math.acos(currentVal) * 180 / Math.PI;
+                    break;
+                case 'atan':
+                    display.value = Math.atan(currentVal) * 180 / Math.PI;
+                    break;
+                case 'sinh':
+                    display.value = Math.sinh(currentVal);
+                    break;
+                case 'cosh':
+                    display.value = Math.cosh(currentVal);
+                    break;
+                case 'tanh':
+                    display.value = Math.tanh(currentVal);
+                    break;
+                case 'log2':
+                    display.value = Math.log2(currentVal);
+                    break;
+                case 'abs':
+                    display.value = Math.abs(currentVal);
+                    break;
+                case 'ceil':
+                    display.value = Math.ceil(currentVal);
+                    break;
+                case 'floor':
+                    display.value = Math.floor(currentVal);
+                    break;
+                case 'fact':
+                    let num = parseInt(currentVal);
+                    if (num < 0) {
+                        display.value = "Error";
+                        return;
+                    }
+                    let result = 1;
+                    for (let i = 2; i <= num; i++) {
+                        result *= i;
+                    }
+                    display.value = result;
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
